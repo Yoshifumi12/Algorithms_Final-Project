@@ -9,6 +9,7 @@ class Node {
     }
 }
 
+let nodes = [[],[],[],[],[],[],[],[]];
 
 const generateBoard = () => {
     let board = document.getElementById('board')
@@ -21,9 +22,25 @@ const generateBoard = () => {
             col.className = "col"
             col.id = `${j}`
             row.appendChild(col)
+
+            let newNode = new Node(i,j)
+            nodes[i].push(newNode)
         }
         board.appendChild(row)
     }
+    console.log(nodes)
+}
+
+const gameStart = () => {
+    let score = document.getElementById("score")
+    score.style.cssText = "max-width: 30%; margin-top:-600px; margin-left:0%;"
+    setNode(3,3,1)
+    setNode(4,4,1)
+    setNode(3,4,2)
+    setNode(4,3,2)
+
+
+
 }
 
 const setNode = (row, column, value) => {
