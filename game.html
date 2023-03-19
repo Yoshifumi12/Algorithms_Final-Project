@@ -24,6 +24,14 @@
             margin-top: -405px;
             margin-left: 35%;
         }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+            margin-top: 20px;
+            margin-left: 5px ;
+            border-radius: 50%;
+        }
     </style>
 
 </head>
@@ -41,13 +49,13 @@
         <div class="card text-center mx-auto">
             <div class="card-body">
                 <h5 class="card-title">Score</h5>
-                <p class="card-text">
+                <p class="card-text" id="white">
                     White:
                 </p>
-                <p>
+                <p class="card-text" id="black">
                     Black:
                 </p>
-                <a >
+                <a>
                     <button class="btn btn-primary" onclick="gameStart()">
                         New game
                     </button>
