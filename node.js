@@ -4,7 +4,6 @@ let currentPlayer = 0;
 
 let flipQueue = new Array();
 
-let tileCoordinate;
 
 const generateBoard = () => {
     let board = document.getElementById('board')
@@ -18,8 +17,7 @@ const generateBoard = () => {
             col.id = `${i}${j}`
 
             col.addEventListener('click', (event) => {
-                tileCoordinate = event.target.id;
-                
+               changeValue(currentPlayer, col.id)
             });
 
             row.appendChild(col)
@@ -35,14 +33,33 @@ const gameStart = () => {
     currentPlayer = 1;
     let score = document.getElementById("score")
     score.style.cssText = "max-width: 30%; margin-top:-600px; margin-left:0%;"
-    setNode(3, 3, 1)
-    setNode(4, 4, 1)
-    setNode(3, 4, 2)
-    setNode(4, 3, 2)
+    nodes[3][3] = 1;
+    nodes[3][4] = 2;
+    nodes[4][4] = 1;
+    nodes[4][3] = 2;
+
+    updateBoard();
 }
 
-const setNode = (row, column, value) => {
-    nodes[row][column] = value
+const changeValue = (currentPlayer, id)=> {
+    let row = id[0];
+    let column = id[1];
+
+    nodes[row][column] === currentPlayer;
+}
+const updateBoard = () => {
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            setNode(i, j)
+        }
+    }
+}
+const play = (node) => {
+    
+    }
+
+const setNode = (row, column) => {
+    let value = nodes[row][column]
     let cell = document.getElementById(`${row}${column}`)
 
     let circle = document.createElement("div")
@@ -79,18 +96,5 @@ const updateScore = () => {
 
     white.innerHTML = `White: ${whiteScore}`;
     black.innerHTML = `Black: ${blackScore}`;;
-}
-
-let play = ()=> {
-
-}
-const isValid = ()=>{
-    let row = tileCoordinate[0]
-    let column = tileCoordinate[1]
-
-    if(nodes[row][column] != 0){
-        return false;
-    }
-
 }
 
