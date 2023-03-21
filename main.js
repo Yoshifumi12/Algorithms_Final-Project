@@ -17,15 +17,19 @@ const generateBoard = () => {
             col.id = `${i}${j}`
 
             col.addEventListener('click', () => {
-                if (verifyUp(col.id, currentPlayer) === true) {
-                    drawTile(col.id, currentPlayer)
-                } else if (verifyDown(col.id, currentPlayer) === true) {
-                    drawTile(col.id, currentPlayer)
-                } else if (verifyRight(col.id, currentPlayer) === true) {
-                    drawTile(col.id, currentPlayer)
-                } else if (verifyLeft(col.id, currentPlayer) === true) {
-                    drawTile(col.id, currentPlayer)
+                if (verify(col.id, currentPlayer) === true) {
+                    getFlippables(col.id, currentPlayer);
+                    while (flipQueue.length != 0) {
+                        flip(flipQueue[flipQueue.length - 1])
+                        flip(flipQueue[flipQueue.length - 1])
+                        flipQueue.pop();
+
+                    }
+
+                    drawTile(col.id, currentPlayer);
+                    changeTurn();
                 }
+
 
             });
 
@@ -54,22 +58,46 @@ const drawTile = (id, value) => {
 
     let circle = document.createElement("div")
     circle.className = "circle"
+    circle.id = `circle${row}${column}`
     if (value === 1) {
         nodes[row][column] = 1;
         circle.style.backgroundColor = "white"
+        cell.appendChild(circle);
+
     }
     if (value === 2) {
         nodes[row][column] = 2;
         circle.style.backgroundColor = "black"
+        cell.appendChild(circle);
+
     }
-    cell.appendChild(circle);
+
     updateScore();
-    changeTurn();
+
+
 
 }
 
+const flip = (id) => {
+    let row = parseInt(id[0]);
+    let column = parseInt(id[1]);
+    let circle = document.getElementById(`circle${row}${column}`)
+    if (nodes[row][column] === 1) {
+        circle.style.backgroundColor = "black"
+        nodes[row][column] = 2;
+    }
+    else if (nodes[row][column] === 2) {
+        circle.style.backgroundColor = "white"
+        nodes[row][column] = 1;
+    }
+    updateScore()
+}
+
 const verify = (id, value) => {
-    if (verifyUp(id, value) === true || verifyDown(id, value) === true || verifyLeft(id, value) === true || verifyRight(id, value) === true) {
+    if (verifyUp(id, value) === true || verifyDown(id, value) === true
+        || verifyLeft(id, value) === true || verifyRight(id, value) === true
+        || verifyNorthEast(id, value) === true || verifyNorthWest(id, value) === true
+        || verifySouthEast(id, value) === true || verifySouthWest(id, value) === true) {
         return true;
     } else {
         return false
@@ -85,6 +113,8 @@ const getFlippables = (id, value) => {
             for (let j = row - 1; j >= i; j--) {
                 if (nodes[j][column] != value) {
                     flipQueue.push(`${j}${column}`)
+                    nodes[j][column] = value;
+
                 }
             }
         }
@@ -92,14 +122,82 @@ const getFlippables = (id, value) => {
     for (let i = row + 1; i < 8; i++) {
         if (nodes[i][column] === value) {
             for (let j = row + 1; j <= i; j++) {
-                flipQueue.push()
+                if (nodes[j][column] != value) {
+                    flipQueue.push(`${j}${column}`)
+                    nodes[j][column] = value;
+                }
+            }
+        }
+    }
+    for (let i = column - 1; i >= 0; i--) {
+        if (nodes[row][i] === value) {
+            for (let j = column - 1; j >= i; j--) {
+                if (nodes[row][j] != value) {
+                    flipQueue.push(`${row}${j}`);
+                    nodes[row][j] = value;
+
+                }
+            }
+        }
+    }
+    for (let i = column + 1; i < 8; i++) {
+        if (nodes[row][i] === value) {
+            for (let j = column + 1; j <= i; j++) {
+                if (nodes[row][j] != value) {
+                    flipQueue.push(`${row}${j}`);
+                    nodes[row][j] = value;
+
+                }
+            }
+        }
+    }
+    for (let i = row - 1, j = column + 1; i >= 0 && j < 8; i--, j++) {
+        if (nodes[i][j] === value) {
+            for (let k = row - 1, l = column + 1; k >= i && l <= j; k--, l++) {
+                if (nodes[k][l] != value) {
+                    flipQueue.push(`${k}${l}`);
+                    nodes[k][l] = value;
+
+                }
+            }
+        }
+    }
+
+    for (let i = row - 1, j = column - 1; i >= 0 && j >= 0; i--, j--) {
+        if (nodes[i][j] === value) {
+            for (let k = row - 1, l = column - 1; k >= i && l >= j; k--, l--) {
+                if (nodes[k][l] != value) {
+                    flipQueue.push(`${k}${l}`);
+                    nodes[k][l] = value;
+
+                }
+            }
+        }
+    }
+
+    for (let i = row + 1, j = column + 1; i < 8 && j < 8; i++, j++) {
+        if (nodes[i][j] === value) {
+            for (let k = row + 1, l = column + 1; k <= i && l <= j; k++, l++) {
+                if (nodes[k][l] != value) {
+                    flipQueue.push(`${k}${l}`);
+                    nodes[k][l] = value;
+
+                }
+            }
+        }
+    }
+    for (let i = row + 1, j = column - 1; i < 8 && j >= 0; i++, j--) {
+        if (nodes[i][j] === value) {
+            for (let k = row + 1, l = column - 1; k <= i && l >= j; k++, l--) {
+                if (nodes[k][l] != value) {
+                    flipQueue.push(`${k}${l}`);
+                    nodes[k][l] = value;
+                }
             }
         }
     }
     console.log(flipQueue)
 }
-
-
 
 
 const verifyUp = (id, value) => {
@@ -121,6 +219,7 @@ const verifyUp = (id, value) => {
             }
         }
     }
+    return false;
 }
 
 const verifyDown = (id, value) => {
@@ -142,6 +241,7 @@ const verifyDown = (id, value) => {
             }
         }
     }
+    return false;
 }
 
 const verifyRight = (id, value) => {
@@ -163,6 +263,7 @@ const verifyRight = (id, value) => {
             }
         }
     }
+    return false;
 }
 
 const verifyLeft = (id, value) => {
@@ -184,7 +285,102 @@ const verifyLeft = (id, value) => {
             }
         }
     }
+    return false;
 }
+
+const verifyNorthEast = (id, value) => {
+    let row = parseInt(id[0]);
+    let column = parseInt(id[1]);
+
+    if (nodes[row][column] != 0) {
+        return false;
+    }
+
+    for (let i = row - 1, j = column + 1; i >= 0 && j < 8; i--, j++) {
+        if (nodes[i][j] === value) {
+            for (let k = row - 1, l = column + 1; k >= i && l <= j; k--, l++) {
+                if (nodes[k][l] === value || nodes[k][l] === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+};
+
+const verifyNorthWest = (id, value) => {
+    let row = parseInt(id[0]);
+    let column = parseInt(id[1]);
+
+    if (nodes[row][column] != 0) {
+        return false;
+    }
+
+    for (let i = row - 1, j = column - 1; i >= 0 && j >= 0; i--, j--) {
+        if (nodes[i][j] === value) {
+            for (let k = row - 1, l = column - 1; k >= i && l >= j; k--, l--) {
+                if (nodes[k][l] === value || nodes[k][l] === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+};
+
+const verifySouthEast = (id, value) => {
+    let row = parseInt(id[0]);
+    let column = parseInt(id[1]);
+
+    if (nodes[row][column] != 0) {
+        return false;
+    }
+
+    for (let i = row + 1, j = column + 1; i < 8 && j < 8; i++, j++) {
+        if (nodes[i][j] === value) {
+            for (let k = row + 1, l = column + 1; k <= i && l <= j; k++, l++) {
+                if (nodes[k][l] === value || nodes[k][l] === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+};
+
+const verifySouthWest = (id, value) => {
+    let row = parseInt(id[0]);
+    let column = parseInt(id[1]);
+
+    if (nodes[row][column] != 0) {
+        return false;
+    }
+
+    for (let i = row + 1, j = column - 1; i < 8 && j >= 0; i++, j--) {
+        if (nodes[i][j] === value) {
+            for (let k = row + 1, l = column - 1; k <= i && l >= j; k++, l--) {
+                if (nodes[k][l] === value || nodes[k][l] === 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+};
+
+
 
 changeTurn = () => {
     currentPlayer = currentPlayer === 1 ? 2 : 1;
