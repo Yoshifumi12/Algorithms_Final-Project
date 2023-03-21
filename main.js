@@ -109,20 +109,25 @@ const getFlippables = (id, value) => {
     let column = parseInt(id[1]);
 
     for (let i = row - 1; i >= 0; i--) {
+        if (nodes[i][column] === 0) {
+            break;
+        }
         if (nodes[i][column] === value) {
             for (let j = row - 1; j >= i; j--) {
-                if (nodes[j][column] != value) {
+                if (nodes[j][column] != value && nodes[j][column] != 0) {
                     flipQueue.push(`${j}${column}`)
                     nodes[j][column] = value;
-
                 }
             }
         }
     }
     for (let i = row + 1; i < 8; i++) {
+        if (nodes[i][column] === 0) {
+            break;
+        }
         if (nodes[i][column] === value) {
             for (let j = row + 1; j <= i; j++) {
-                if (nodes[j][column] != value) {
+                if (nodes[j][column] != value && nodes[j][column] != 0) {
                     flipQueue.push(`${j}${column}`)
                     nodes[j][column] = value;
                 }
@@ -130,9 +135,12 @@ const getFlippables = (id, value) => {
         }
     }
     for (let i = column - 1; i >= 0; i--) {
+        if (nodes[row][i] === 0) {
+            break;
+        }
         if (nodes[row][i] === value) {
             for (let j = column - 1; j >= i; j--) {
-                if (nodes[row][j] != value) {
+                if (nodes[row][j] != value && nodes[row][j] != 0) {
                     flipQueue.push(`${row}${j}`);
                     nodes[row][j] = value;
 
@@ -141,9 +149,12 @@ const getFlippables = (id, value) => {
         }
     }
     for (let i = column + 1; i < 8; i++) {
+        if (nodes[row][i] === 0) {
+            break;
+        }
         if (nodes[row][i] === value) {
             for (let j = column + 1; j <= i; j++) {
-                if (nodes[row][j] != value) {
+                if (nodes[row][j] != value && nodes[row][j] != 0) {
                     flipQueue.push(`${row}${j}`);
                     nodes[row][j] = value;
 
@@ -152,9 +163,12 @@ const getFlippables = (id, value) => {
         }
     }
     for (let i = row - 1, j = column + 1; i >= 0 && j < 8; i--, j++) {
+        if (nodes[i][j] === 0) {
+            break;
+        }
         if (nodes[i][j] === value) {
             for (let k = row - 1, l = column + 1; k >= i && l <= j; k--, l++) {
-                if (nodes[k][l] != value) {
+                if (nodes[k][l] != value && nodes[k][l] != 0) {
                     flipQueue.push(`${k}${l}`);
                     nodes[k][l] = value;
 
@@ -164,9 +178,12 @@ const getFlippables = (id, value) => {
     }
 
     for (let i = row - 1, j = column - 1; i >= 0 && j >= 0; i--, j--) {
+        if (nodes[i][j] === 0) {
+            break;
+        }
         if (nodes[i][j] === value) {
             for (let k = row - 1, l = column - 1; k >= i && l >= j; k--, l--) {
-                if (nodes[k][l] != value) {
+                if (nodes[k][l] != value && nodes[k][l] != 0) {
                     flipQueue.push(`${k}${l}`);
                     nodes[k][l] = value;
 
@@ -176,9 +193,12 @@ const getFlippables = (id, value) => {
     }
 
     for (let i = row + 1, j = column + 1; i < 8 && j < 8; i++, j++) {
+        if (nodes[i][j] === 0) {
+            break;
+        }
         if (nodes[i][j] === value) {
             for (let k = row + 1, l = column + 1; k <= i && l <= j; k++, l++) {
-                if (nodes[k][l] != value) {
+                if (nodes[k][l] != value && nodes[k][l] != 0) {
                     flipQueue.push(`${k}${l}`);
                     nodes[k][l] = value;
 
@@ -187,9 +207,12 @@ const getFlippables = (id, value) => {
         }
     }
     for (let i = row + 1, j = column - 1; i < 8 && j >= 0; i++, j--) {
+        if (nodes[i][j] === 0) {
+            break;
+        }
         if (nodes[i][j] === value) {
             for (let k = row + 1, l = column - 1; k <= i && l >= j; k++, l--) {
-                if (nodes[k][l] != value) {
+                if (nodes[k][l] != value && nodes[k][l] != 0) {
                     flipQueue.push(`${k}${l}`);
                     nodes[k][l] = value;
                 }
